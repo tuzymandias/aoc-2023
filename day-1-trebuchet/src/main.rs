@@ -26,20 +26,16 @@ fn parse(s: &str) -> Option<i32> {
 }
 
 fn compute_calibration_value(line: &str) -> i32 {
-    let pair = str_windows(line, 5)
+    let (first, last) = str_windows(line, 5)
         .filter_map(|window| parse(window))
-        .fold((None, None), |(first, last), number| {
+        .fold((0, 0), |(first, last), number| {
             match (first, last) {
-                (None, None) => (Some(number), Some(number)),
-                (Some(a), _) => (Some(a), Some(number)),
-                _ => unreachable!()
+                (0, 0) => (number, number),
+                (a, _) => (a, number),
             }
         });
 
-    match pair {
-        (Some(first), Some(last)) => first * 10 + last,
-        _ => 0
-    }
+    first * 10 + last
 }
 
 fn main() {
